@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import { FormSpy } from 'react-final-form'
 import { Link } from 'react-router-dom'
 
-import SirenField from 'components/layout/form/fields/SirenField/SirenField'
+import { SirenField } from 'components/layout/form/fields/SirenField'
 
 const OffererCreationForm = ({ backTo, handleSubmit, invalid, pristine }) => {
   const renderAddress = useCallback(
