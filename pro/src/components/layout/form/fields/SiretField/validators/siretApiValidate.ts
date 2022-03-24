@@ -1,7 +1,7 @@
-import { getEntrepriseData } from 'core/Venue'
+import { getSiretDataAdapter } from 'core/Venue'
 
 const siretApiValidate = async (siret: string): Promise<string | undefined> => {
-  const entrepriseData = await getEntrepriseData(siret)
+  const entrepriseData = await getSiretDataAdapter(siret)
   return entrepriseData.isOk ? undefined : entrepriseData.message
 }
 
