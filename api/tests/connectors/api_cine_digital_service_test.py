@@ -5,13 +5,13 @@ from unittest import mock
 
 import pytest
 
-from pcapi.connectors.cine_digital_service import get_shows
+from pcapi.connectors.api_cine_digital_service import get_shows
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 from pcapi.core.testing import override_settings
 
 
 class CineDigitalServiceGetShowsTest:
-    @mock.patch("pcapi.connectors.cine_digital_service.requests.get")
+    @mock.patch("pcapi.connectors.api_cine_digital_service.requests.get")
     @override_settings(IS_DEV=False)
     def test_should_return_all_necessary_attributes(self, request_get):
         # Given
@@ -43,7 +43,7 @@ class CineDigitalServiceGetShowsTest:
         assert shows[0].is_cancelled
         assert not shows[0].is_deleted
 
-    @mock.patch("pcapi.connectors.cine_digital_service.requests.get")
+    @mock.patch("pcapi.connectors.api_cine_digital_service.requests.get")
     @override_settings(IS_DEV=False)
     def test_should_return_shows_with_success(self, request_get):
         # Given
@@ -78,7 +78,7 @@ class CineDigitalServiceGetShowsTest:
         request_get.assert_called_once_with(f"https://{cinema_id}.{url}shows?api_token={token}")
         assert len(shows) == 2
 
-    @mock.patch("pcapi.connectors.cine_digital_service.requests.get")
+    @mock.patch("pcapi.connectors.api_cine_digital_service.requests.get")
     @override_settings(IS_DEV=False)
     def test_should_raise_exception_when_api_call_fails(self, request_get):
         # Given
@@ -97,7 +97,7 @@ class CineDigitalServiceGetShowsTest:
             str(exception.value) == f"Error getting Cine Digital Service API DATA for cinemaId={cinema_id} & url={url}"
         )
 
-    @mock.patch("pcapi.connectors.cine_digital_service.requests.get", side_effect=Exception)
+    @mock.patch("pcapi.connectors.api_cine_digital_service.requests.get", side_effect=Exception)
     @override_settings(IS_DEV=False)
     def test_should_raise_exception_when_api_call_fails_with_connection_error(self, request_get):
         # Given

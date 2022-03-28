@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pcapi.connectors.serialization.cine_digital_service_serializers import ShowCDS
+from pcapi.connectors.serialization.api_cine_digital_service_serializers import ShowCDS
 from pcapi.core.booking_providers.cds.CineDigitalService import CineDigitalServiceAPI
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 

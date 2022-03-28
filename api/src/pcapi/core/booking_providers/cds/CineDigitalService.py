@@ -1,5 +1,5 @@
-from pcapi.connectors.cine_digital_service import get_shows
-from pcapi.connectors.serialization.cine_digital_service_serializers import ShowCDS
+from pcapi.connectors.api_cine_digital_service import get_shows
+from pcapi.connectors.serialization.api_cine_digital_service_serializers import ShowCDS
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 
 
