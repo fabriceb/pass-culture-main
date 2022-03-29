@@ -1,15 +1,14 @@
-import createDecorator from 'final-form-calculate'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
 import { Form } from 'react-final-form'
 import { removeWhitespaces } from 'react-final-form-utils'
 import { NavLink } from 'react-router-dom'
 
+import { addressAndDesignationFromSirenDecorator } from 'components/layout/form/fields/SirenField'
 import Icon from 'components/layout/Icon'
 import PageTitle from 'components/layout/PageTitle/PageTitle'
 import Titles from 'components/layout/Titles/Titles'
 import * as pcapi from 'repository/pcapi/pcapi'
-import { bindAddressAndDesignationFromSiren } from 'repository/siren/bindSirenFieldToDesignation'
 
 import OffererCreationForm from './OffererCreationForm/OffererCreationForm'
 import OffererCreationUnavailable from './OffererCreationUnavailable/OffererCreationUnavailable'
@@ -44,15 +43,6 @@ class OffererCreation extends PureComponent {
     showNotification('Vous étes déjà rattaché à cette structure.', 'error')
   }
 
-  createDecorators = () => {
-    const addressAndDesignationFromSirenDecorator = createDecorator({
-      field: 'siren',
-      updates: bindAddressAndDesignationFromSiren,
-    })
-
-    return [addressAndDesignationFromSirenDecorator]
-  }
-
   render() {
     const { isEntrepriseApiDisabled } = this.props
     return (
@@ -69,7 +59,7 @@ class OffererCreation extends PureComponent {
           <Form
             backTo="/accueil"
             component={OffererCreationForm}
-            decorators={this.createDecorators()}
+            decorators={[addressAndDesignationFromSirenDecorator]}
             onSubmit={this.handleSubmit}
           />
         )}
