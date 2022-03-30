@@ -19,7 +19,7 @@ const ChangePasswordForm = ({
   <section className={styles['change-password-form']}>
     <div className={styles['hero-body']}>
       <h1>Créer un nouveau mot de passe</h1>
-      <h2>Saisissez le nouveau mot de passe</h2>
+      <p>Saisissez le nouveau mot de passe</p>
       <Form onSubmit={onSubmit}>
         {({ handleSubmit, errors, values }) => (
           <form onSubmit={handleSubmit}>
