@@ -14,3 +14,10 @@ class ShowCDS(BaseModel):
 
     class Config:
         allow_population_by_field_name = True
+
+
+class ScreenCDS(BaseModel):
+    id: int
+    seatmap_front_to_back: bool = Field(alias="seatmapfronttoback")
+    seatmap_left_to_right: bool = Field(alias="seatmaplefttoright")
+    seatmap_skip_missing_seats: bool = Field(alias="seatmapskipmissingseats")
