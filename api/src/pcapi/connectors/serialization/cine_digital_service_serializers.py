@@ -21,3 +21,19 @@ class ScreenCDS(BaseModel):
     seatmap_front_to_back: bool = Field(alias="seatmapfronttoback")
     seatmap_left_to_right: bool = Field(alias="seatmaplefttoright")
     seatmap_skip_missing_seats: bool = Field(alias="seatmapskipmissingseats")
+
+
+class SeatmapCDS(BaseModel):
+    __root__: list[list[int]]
+
+    @property
+    def map(self) -> list[list[int]]:
+        return self.__root__
+
+    @property
+    def nb_row(self) -> int:
+        return len(self.map)
+
+    @property
+    def nb_col(self) -> int:
+        return len(self.map[0]) if len(self.map[0]) > 0 else 0

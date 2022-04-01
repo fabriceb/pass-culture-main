@@ -6,6 +6,7 @@ from unittest import mock
 import pytest
 
 from pcapi.connectors.cine_digital_service import get_screens
+from pcapi.connectors.cine_digital_service import get_seatmap
 from pcapi.connectors.cine_digital_service import get_shows
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 from pcapi.core.testing import override_settings
@@ -211,3 +212,33 @@ class CineDigitalServiceGetScreensTest:
 
         # Then
         assert str(cds_exception.value) == f"Error connecting CDS for cinemaId={cinema_id} & url={url}"
+
+
+class CineDigitalServiceGetSeatmapTest:
+    @mock.patch("pcapi.connectors.cine_digital_service.requests.get")
+    @override_settings(IS_DEV=False)
+    def test_should_return_seatmap_correctly_formated(self, request_get):
+        # Given
+        cinema_id = "test_id"
+        url = "test_url"
+        token = "test_token"
+        show_id = 1
+        seatmap_json = [
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [1, 3, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1],
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1],
+        ]
+
+        response_return_value = mock.MagicMock(status_code=200, text="")
+        response_return_value.json = mock.MagicMock(return_value=seatmap_json)
+        request_get.return_value = response_return_value
+
+        # When
+        seatmap = get_seatmap(cinema_id, url, show_id, token)
+        assert seatmap.nb_row == 8
+        assert seatmap.nb_col == 11
