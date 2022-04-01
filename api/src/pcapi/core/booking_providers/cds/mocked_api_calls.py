@@ -2560,3 +2560,131 @@ class MockedShows:
                 "forceTariffs": False,
             },
         ]
+
+
+class MockedCreateTransaction:
+    status_code = 200
+
+    def json(self):
+        return """{
+            "id": 2964,
+            "invoiceid": "3472",
+            "tickets": [
+                {"barcode": "1433907783605",
+                 "canceled": false,
+                 "cancellable": true,
+                 "cinemaid": "cdsdemorc1",
+                 "controlled": false,
+                 "disabledperson": false,
+                 "id": 7699,
+                 "musictaxrate": 1.21,
+                 "operationdate": "2022-03-29T10:00:17.856+02:00",
+                 "operationsid": {
+                     "cinemaid": "cdsdemorc1",
+                     "cncoperation": true,
+                     "description": "Ticket sale: BLADE RUNNER - Showtime: 2022-04-21T21:00:00+0200 - Screen: 1 - Price: 5.00 - Remaining places: 90 (POS) + 109 (INTERNET) - Ticket code: A58-0000001-1-1-0084585 - Bar code: 1433907783605",
+                     "id": 197082059,
+                     "operationnumber": 84585,
+                     "operationtime": "2022-03-29T10:00:17.856+02:00",
+                     "type": "Sale",
+                     "userid": {
+                         "deleted": false,
+                         "id": 4,
+                         "multisitesaccess": false,
+                         "passwordchanged": false,
+                         "presaleswitchuser": false
+                     },
+                     "workstationid": {
+                         "active": true,
+                         "allowbasketsave": false,
+                         "cashdrawerbutton": false,
+                         "cinemaid": "cdsdemorc1",
+                         "confectioneryenabled": true,
+                         "deleted": false,
+                         "deviceuuid": "a6c524e6-3383-11e9-b210-d663bd873d93",
+                         "id": 5,
+                         "ipaddress": "127.0.0.1",
+                         "loyaltyenabled": true,
+                         "name": "INTERNET",
+                         "postypeid": {
+                             "bydefault": false,
+                             "code": "INT",
+                             "id": 3,
+                             "label": "Internet",
+                             "postypeorder": 3
+                         },
+                         "serialdisplayenabled": false,
+                         "ticketingenabled": true
+                     }
+                 },
+                 "presaleserialid": 1,
+                 "presaleticketcode": "A58-0000001-1-1-0084585",
+                 "price": 5,
+                 "pricetotal": 5,
+                 "printed": true,
+                 "printingproblem": false,
+                 "seatcol": 1,
+                 "seatnumber": "A_1",
+                 "seatrow": 1,
+                 "showid": {
+                     "bookings": 0,
+                     "canceled": false,
+                     "deleted": false,
+                     "disableseatmap": false,
+                     "displaysoldout": false,
+                     "draft": false,
+                     "excludefromallocine": false,
+                     "excludefromcinetick": false,
+                     "excludefromsignage": false,
+                     "firstpartduration": 0,
+                     "forceTariffs": false,
+                     "id": 4843,
+                     "immediateentranceready": false,
+                     "immediateentranceswitch": 0,
+                     "internetgaugeswitched": false,
+                     "partialinternetgaugeswitched": false,
+                     "premiere": false,
+                     "threed": false
+                 },
+                 "tariffid": {
+                     "active": false,
+                     "cashcolor": "#ff0000",
+                     "cashdisplaylabel": "PCult",
+                     "cashlabel": "A58",
+                     "cinemaid": "cdsdemorc1",
+                     "clientamount": 0,
+                     "deleted": false,
+                     "hidden": false,
+                     "id": 91,
+                     "internetprooftext": "",
+                     "iscardtype": false,
+                     "isvouchertype": true,
+                     "labeltariff": "Pass Culture 5€",
+                     "locationtariff": false,
+                     "multiplepayers": false,
+                     "needsjustificative": false,
+                     "price": 5,
+                     "tariffPostypeCollection": [{
+                         "id": 231,
+                         "postypeid": {
+                             "bydefault": true,
+                             "code": "POS",
+                             "id": 1,
+                             "label": "Caisse",
+                             "postypeorder": 1
+                         }
+                     }],
+                     "tariffcategoryid": {
+                         "id": 4,
+                         "label": "Autre",
+                         "nationalcode": "TAU"
+                     },
+                     "tarifforder": 0,
+                     "thirdpartyamount": 0,
+                     "used": false
+                 },
+                 "tsarate": 10.72,
+                 "tvarate": 5.5
+                 }],
+            "uuidbarcode": "95b2ccf0-1905-4177-84fe-0cdfde7f3be0@INT"
+        }"""

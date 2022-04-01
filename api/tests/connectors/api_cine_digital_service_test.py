@@ -1,11 +1,17 @@
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
+import json
 from unittest import mock
 
 import pytest
 
+from pcapi.connectors.cine_digital_service import create_transaction
 from pcapi.connectors.cine_digital_service import get_shows
+from pcapi.connectors.serialization.cine_digital_service_serializers import CreateTransactionBodyCDS
+from pcapi.connectors.serialization.cine_digital_service_serializers import IdObjectCDS
+from pcapi.connectors.serialization.cine_digital_service_serializers import PaiementCDS
+from pcapi.connectors.serialization.cine_digital_service_serializers import TicketSaleCDS
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 from pcapi.core.testing import override_settings
 
@@ -111,3 +117,98 @@ class CineDigitalServiceGetShowsTest:
 
         # Then
         assert str(cds_exception.value) == f"Error connecting CDS for cinemaId={cinema_id} & url={url}"
+
+
+class CineDigitalServiceCreateTransactionTest:
+    @staticmethod
+    def _create_transaction_body():
+        tariffid = IdObjectCDS(id=1)
+        showid = IdObjectCDS(id=1)
+        paiementtypeid = IdObjectCDS(id=1)
+        ticket_sale = TicketSaleCDS(
+            id=-1,
+            cinemaid="test_id",
+            operationdate="2022-04-08T14:58:57.223+01:00",
+            canceled=True,
+            tariffid=tariffid,
+            showid=showid,
+            disabledperson=False,
+        )
+        paiement = PaiementCDS(id=1, amount=5, paiementtypeid=paiementtypeid)
+        return CreateTransactionBodyCDS(
+            transactiondate="2022-04-08T14:58:57.223+01:00",
+            canceled=False,
+            cinemaid="test_id",
+            ticketsaleCollection=[ticket_sale],
+            paiementCollection=[paiement],
+        )
+
+    @mock.patch("pcapi.connectors.cine_digital_service.requests.post")
+    @override_settings(IS_DEV=False)
+    def test_should_return_create_transaction_body_object(self, mocked_request_post):
+        cinema_id = "test_id"
+        url = "test_url"
+        token = "test_token"
+
+        create_transaction_json_response = {
+            "id": 1111,
+            "invoiceid": "2222",
+            "tickets": [
+                {
+                    "barcode": "5555555555555",
+                }
+            ],
+        }
+
+        response_return_value = mock.MagicMock(status_code=200)
+        response_return_value.json = mock.MagicMock(return_value=create_transaction_json_response)
+        mocked_request_post.return_value = response_return_value
+
+        body = self._create_transaction_body()
+
+        response = create_transaction(cinema_id, url, token, body)
+
+        post_call_data_arg = mocked_request_post.call_args[1]["data"]
+        expected_body_json = {
+            "cinemaid": "test_id",
+            "transactiondate": "2022-04-08T14:58:57.223+01:00",
+            "canceled": False,
+            "ticketsaleCollection": [
+                {
+                    "id": -1,
+                    "cinemaid": "test_id",
+                    "operationdate": "2022-04-08T14:58:57.223+01:00",
+                    "canceled": True,
+                    "tariffid": {"id": 1},
+                    "showid": {"id": 1},
+                    "disabledperson": False,
+                }
+            ],
+            "paiementCollection": [{"id": 1, "amount": 5.0, "paiementtypeid": {"id": 1}}],
+        }
+
+        assert json.loads(post_call_data_arg) == expected_body_json
+
+        assert len(response) == 1
+        assert response == ["5555555555555"]
+
+    @mock.patch("pcapi.connectors.cine_digital_service.requests.post")
+    @override_settings(IS_DEV=False)
+    def test_should_raise_exception_when_show_not_found(self, mocked_request_post):
+        cinema_id = "test_id"
+        url = "test_url"
+        token = "test_token"
+        show_id = 1478
+
+        response_return_value = mock.MagicMock(status_code=401, text="SHOW_NOT_FOUND")
+        mocked_request_post.return_value = response_return_value
+        body = self._create_transaction_body()
+        body.ticketsaleCollection[0].showid.id = show_id
+
+        with pytest.raises(cds_exceptions.CineDigitalServiceAPIException) as cds_exception:
+            create_transaction(cinema_id, url, token, body)
+
+        assert (
+            str(cds_exception.value)
+            == f"Show id={show_id} not found Cine digital Service API cinemaId={cinema_id} & url={url}"
+        )
