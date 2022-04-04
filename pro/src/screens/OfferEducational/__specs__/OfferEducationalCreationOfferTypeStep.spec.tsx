@@ -209,7 +209,7 @@ describe('screens | OfferEducational : creation offer type step', () => {
       )
 
       const title = 'a valid title'
-      userEvent.paste(titleInput.input as HTMLInputElement, title)
+      userEvent.type(titleInput.input as HTMLInputElement, title)
 
       await waitFor(() => expect(titleInput.getError()).not.toBeInTheDocument())
       expect(titleInput.getCounter()).toHaveTextContent(
@@ -233,7 +233,7 @@ describe('screens | OfferEducational : creation offer type step', () => {
 
       const descriptionString = 'my description that is valid'
 
-      userEvent.paste(
+      userEvent.type(
         description.input as HTMLTextAreaElement,
         descriptionString
       )
@@ -258,7 +258,7 @@ describe('screens | OfferEducational : creation offer type step', () => {
       const duration = queryDurationInput()
       expect(duration.input).toHaveValue('')
 
-      userEvent.paste(duration.input as HTMLInputElement, 'bad String')
+      userEvent.type(duration.input as HTMLInputElement, 'bad String')
 
       await waitFor(() => expect(duration.input).toHaveValue('bad String'))
 
@@ -271,7 +271,7 @@ describe('screens | OfferEducational : creation offer type step', () => {
       )
 
       userEvent.clear(duration.input as HTMLInputElement)
-      userEvent.paste(duration.input as HTMLInputElement, '2:30')
+      userEvent.type(duration.input as HTMLInputElement, '2:30')
 
       await waitFor(() => expect(duration.input).toHaveValue('2:30'))
       await waitFor(() => expect(duration.getError()).not.toBeInTheDocument())

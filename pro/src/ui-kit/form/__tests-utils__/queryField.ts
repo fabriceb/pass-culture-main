@@ -44,7 +44,7 @@ export const queryField = <
     const expectedTruncatedString = stringWithCharCount(charCount)
 
     userEvent.clear(input as T)
-    userEvent.paste(input as T, tooLongString)
+    userEvent.type(input as T, tooLongString)
 
     await within(wrapper).findByText(`${charCount}/${charCount}`)
 

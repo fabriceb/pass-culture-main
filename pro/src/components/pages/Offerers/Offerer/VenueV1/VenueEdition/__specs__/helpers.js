@@ -14,9 +14,9 @@ export const getContactInputs = async () => {
     userEvent.clear(contactMail)
     userEvent.clear(contactUrl)
 
-    userEvent.paste(contactPhoneNumber, phoneNumber)
-    userEvent.paste(contactMail, email)
-    userEvent.paste(contactUrl, website)
+    userEvent.type(contactPhoneNumber, phoneNumber)
+    userEvent.type(contactMail, email)
+    userEvent.type(contactUrl, website)
   }
 
   return {

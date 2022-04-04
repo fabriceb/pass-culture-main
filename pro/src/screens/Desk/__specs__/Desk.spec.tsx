@@ -75,15 +75,15 @@ describe('src | components | Desk', () => {
     const { messageContainer, inputToken } = await renderDeskScreen(props)
     expect(messageContainer.textContent).toBe(expectedMessage.default)
 
-    userEvent.paste(inputToken, 'AA"-,')
+    userEvent.type(inputToken, 'AA"-,')
     expect(messageContainer.textContent).toBe(expectedMessage.invalidSyntax)
 
     clearInputText(inputToken)
-    userEvent.paste(inputToken, 'AA')
+    userEvent.type(inputToken, 'AA')
     expect(messageContainer.textContent).toContain(expectedMessage.tooShort)
 
     clearInputText(inputToken)
-    userEvent.paste(inputToken, 'AAAAAAA')
+    userEvent.type(inputToken, 'AAAAAAA')
     expect(messageContainer.textContent).toBe(expectedMessage.tooLong)
 
     expect(props.getBooking).not.toHaveBeenCalled()
@@ -93,7 +93,7 @@ describe('src | components | Desk', () => {
     const { messageContainer, inputToken, buttonSubmitValidated } =
       await renderDeskScreen(props)
 
-    userEvent.paste(inputToken, 'AAAAAA')
+    userEvent.type(inputToken, 'AAAAAA')
     await waitFor(() => {
       expect(messageContainer.textContent).toBe(
         'Coupon vérifié, cliquez sur "Valider" pour enregistrer'
@@ -123,7 +123,7 @@ describe('src | components | Desk', () => {
     const { messageContainer, inputToken, buttonSubmitValidated } =
       await renderDeskScreen(props)
 
-    userEvent.paste(inputToken, 'AAAAAA')
+    userEvent.type(inputToken, 'AAAAAA')
     await waitFor(() => {
       expect(messageContainer.textContent).toBe(
         alreadyValidatedErrorMessage.message
@@ -141,7 +141,7 @@ describe('src | components | Desk', () => {
     const { messageContainer, inputToken, buttonSubmitValidated } =
       await renderDeskScreen(props)
 
-    userEvent.paste(inputToken, 'AAAAAA')
+    userEvent.type(inputToken, 'AAAAAA')
     await waitFor(() => {
       expect(messageContainer.textContent).toBe(
         'Coupon vérifié, cliquez sur "Valider" pour enregistrer'
@@ -172,7 +172,7 @@ describe('src | components | Desk', () => {
     const { messageContainer, inputToken, buttonSubmitValidated } =
       await renderDeskScreen(props)
 
-    userEvent.paste(inputToken, 'AAAAAA')
+    userEvent.type(inputToken, 'AAAAAA')
     await waitFor(() => {
       expect(messageContainer.textContent).toBe(
         alreadyValidatedErrorMessage.message
@@ -208,7 +208,7 @@ describe('src | components | Desk', () => {
     const { messageContainer, inputToken, buttonSubmitValidated } =
       await renderDeskScreen(props)
 
-    userEvent.paste(inputToken, 'AAAAAA')
+    userEvent.type(inputToken, 'AAAAAA')
     await waitFor(() => {
       expect(messageContainer.textContent).toBe(
         alreadyValidatedErrorMessage.message

@@ -40,6 +40,8 @@ export const fieldLabels = {
   withdrawalDetails: { label: 'Informations de retrait', exact: false },
 }
 
+export const getLabelForField = fieldName => fieldLabels[fieldName]
+
 export const getOfferInputForField = async fieldName => {
   const { label, exact } = fieldLabels[fieldName]
   return await screen.findByLabelText(label, { exact })
@@ -53,7 +55,7 @@ export const queryInputErrorForField = fieldName => {
   return screen.queryByTestId(`input-error-field-${fieldName}`)
 }
 
-export const setOfferValues = values => {
+export const setOfferValues = async values => {
   const checkboxes = [
     'audioDisabilityCompliant',
     'mentalDisabilityCompliant',
@@ -63,10 +65,10 @@ export const setOfferValues = values => {
   ]
   const offerTypeRadio = ['isDuo']
 
-  const setFormValueForField = (field, value) => {
+  const setFormValueForField = async (field, value) => {
     let input
     const { label, exact } = fieldLabels[field]
-    input = screen.getByLabelText(label, { exact })
+    input = await screen.findByLabelText(label, { exact })
 
     if (checkboxes.includes(field)) {
       userEvent.click(input)

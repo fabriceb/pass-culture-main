@@ -23,6 +23,7 @@ import { configureTestStore } from 'store/testUtils'
 import { DEFAULT_FORM_VALUES } from '../_constants'
 
 import {
+  getLabelForField,
   fieldLabels,
   findInputErrorForField,
   getOfferInputForField,
@@ -1123,10 +1124,12 @@ describe('offerDetails - Edition', () => {
         })
 
         // then
-        expect(
-          screen.getByLabelText('Email auquel envoyer les notifications :')
-            .value
-        ).toBe('venue@example.com')
+        await waitFor(() =>
+          expect(
+            screen.getByLabelText('Email auquel envoyer les notifications :')
+              .value
+          ).toBe('venue@example.com')
+        )
       })
     })
   })
@@ -1151,40 +1154,37 @@ describe('offerDetails - Edition', () => {
       await setOfferValues(editValues)
       const newEditedOffer = { ...editedOffer, ...editValues }
       jest.spyOn(apiV1, 'getOffersGetOffer').mockResolvedValue(newEditedOffer)
-      fireEvent.click(screen.getByText('Enregistrer'))
+      fireEvent.click(await screen.findByText('Enregistrer'))
       fireEvent.click(screen.getByText('Stock et prix'))
-      fireEvent.click(await screen.findByText("Détails de l'offre"))
+      fireEvent.click(screen.getByText("Détails de l'offre"))
 
       // Then
-      await expect(getOfferInputForField('name')).resolves.toHaveValue(
-        editValues.name
-      )
+      expect(await getOfferInputForField('name')).toHaveValue(editValues.name)
 
       const expectedSubCategoryValue = categories.subcategories.find(
         subCat => subCat.id.toString() === editValues.subcategoryId
       ).proLabel
-      await expect(
-        getOfferInputForField('subcategoryId')
-      ).resolves.toHaveTextContent(expectedSubCategoryValue)
-
-      await expect(
-        getOfferInputForField('description')
-      ).resolves.toHaveTextContent(editValues.description)
-      await expect(
-        getOfferInputForField('withdrawalDetails')
-      ).resolves.toHaveTextContent(editValues.withdrawalDetails)
-      await expect(
-        getOfferInputForField('audioDisabilityCompliant')
-      ).resolves.toBeChecked()
-      await expect(
-        getOfferInputForField('visualDisabilityCompliant')
-      ).resolves.not.toBeChecked()
-      await expect(
-        getOfferInputForField('motorDisabilityCompliant')
-      ).resolves.toBeChecked()
-      await expect(
-        getOfferInputForField('mentalDisabilityCompliant')
-      ).resolves.toBeChecked()
+      expect(await getOfferInputForField('subcategoryId')).toHaveTextContent(
+        expectedSubCategoryValue
+      )
+      expect(await getOfferInputForField('description')).toHaveTextContent(
+        editValues.description
+      )
+      expect(
+        await getOfferInputForField('withdrawalDetails')
+      ).toHaveTextContent(editValues.withdrawalDetails)
+      expect(
+        await getOfferInputForField('audioDisabilityCompliant')
+      ).toBeChecked()
+      expect(
+        await getOfferInputForField('visualDisabilityCompliant')
+      ).not.toBeChecked()
+      expect(
+        await getOfferInputForField('motorDisabilityCompliant')
+      ).toBeChecked()
+      expect(
+        await getOfferInputForField('mentalDisabilityCompliant')
+      ).toBeChecked()
     })
 
     it('should not send not editable fields for non-synchronised offers', async () => {
@@ -1212,7 +1212,7 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
 
       // When
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       await waitFor(() =>
@@ -1249,13 +1249,13 @@ describe('offerDetails - Edition', () => {
       }
       jest.spyOn(apiV1, 'getOffersGetOffer').mockResolvedValue(editedOffer)
       await renderOffers(props, store)
-      const submitButton = screen.getByText('Enregistrer')
+      const submitButton = await screen.findByText('Enregistrer')
 
       // When
       userEvent.click(submitButton)
 
       // Then
-      expect(submitButton).toBeDisabled()
+      await waitFor(() => expect(submitButton).toBeDisabled())
       const successNotification = await screen.findByText(
         'Votre offre a bien été modifiée'
       )
@@ -1305,7 +1305,7 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
 
       // When
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       await waitFor(() =>
@@ -1350,7 +1350,7 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
 
       // When
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       await waitFor(() =>
@@ -1391,7 +1391,7 @@ describe('offerDetails - Edition', () => {
       await setOfferValues({ author: DEFAULT_FORM_VALUES.author })
 
       // Then
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
       await waitFor(() =>
         expect(pcapi.updateOffer).toHaveBeenCalledWith(
           editedOffer.id,
@@ -1444,7 +1444,7 @@ describe('offerDetails - Edition', () => {
       await setOfferValues({ author: DEFAULT_FORM_VALUES.author })
 
       // Then
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       await waitFor(() =>
         expect(pcapi.updateOffer).toHaveBeenCalledWith(
@@ -1482,7 +1482,7 @@ describe('offerDetails - Edition', () => {
       await setOfferValues({ receiveNotificationEmails: false })
 
       // When
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       await waitFor(() =>
@@ -1513,23 +1513,27 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
       await setOfferValues({ receiveNotificationEmails: true })
       fireEvent.change(
-        screen.getByLabelText('Email auquel envoyer les notifications :'),
+        await screen.findByLabelText(
+          'Email auquel envoyer les notifications :'
+        ),
         {
           target: { value: '' },
         }
       )
 
       // When
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       const bookingEmailInput = await findInputErrorForField('bookingEmail')
       expect(bookingEmailInput).toHaveTextContent('Ce champ est obligatoire')
-      expect(
-        screen.getByText(
-          'Une ou plusieurs erreurs sont présentes dans le formulaire'
-        )
-      ).toBeInTheDocument()
+      await waitFor(() =>
+        expect(
+          screen.getByText(
+            'Une ou plusieurs erreurs sont présentes dans le formulaire'
+          )
+        ).toBeInTheDocument()
+      )
     })
 
     it('should show error sent by API and show an error notification', async () => {
@@ -1561,7 +1565,7 @@ describe('offerDetails - Edition', () => {
       await setOfferValues({ name: 'Ce nom serait-il invalide ?' })
 
       // When
-      userEvent.click(screen.getByText('Enregistrer'))
+      userEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       const nameError = await screen.findByText("Ce nom n'est pas valide")
@@ -1581,7 +1585,7 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
 
       // When
-      fireEvent.click(screen.getByText('Enregistrer'))
+      fireEvent.click(await screen.findByText('Enregistrer'))
 
       // Then
       const successNotification = await screen.findByText(
@@ -1628,7 +1632,9 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
 
       // When
-      userEvent.click(screen.getByRole('link', { name: 'Annuler et quitter' }))
+      userEvent.click(
+        await screen.findByRole('link', { name: 'Annuler et quitter' })
+      )
 
       // Then
       expect(computeUrl.computeOffersUrl).toHaveBeenLastCalledWith(
@@ -1663,7 +1669,7 @@ describe('offerDetails - Edition', () => {
       await renderOffers(props, store)
 
       // Then
-      const cancelLink = screen.getByRole('link', {
+      const cancelLink = await screen.findByRole('link', {
         name: 'Annuler et quitter',
       })
       expect(cancelLink).toBeInTheDocument()
