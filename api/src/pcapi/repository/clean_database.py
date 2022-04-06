@@ -7,6 +7,7 @@ import pcapi.core.mails.models as mails_models
 import pcapi.core.offerers.models as offerers_models
 import pcapi.core.offers.models as offers_models
 import pcapi.core.payments.models as payments_models
+from pcapi.core.permissions.models import sync_db_permissions
 import pcapi.core.providers.models as providers_models
 import pcapi.core.users.models as users_models
 from pcapi.local_providers.install import install_local_providers
@@ -102,3 +103,4 @@ def clean_all_database(*args, **kwargs):
     db.session.commit()
     install_feature_flags()
     install_local_providers()
+    sync_db_permissions(db.session)
