@@ -1,5 +1,7 @@
-from pcapi.connectors.api_cine_digital_service import get_shows
-from pcapi.connectors.serialization.api_cine_digital_service_serializers import ShowCDS
+from pcapi.connectors.cine_digital_service import cancel_booking
+from pcapi.connectors.cine_digital_service import get_shows
+from pcapi.connectors.serialization.cine_digital_service_serializers import CancelBookingCDS
+from pcapi.connectors.serialization.cine_digital_service_serializers import ShowCDS
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 
 
@@ -17,3 +19,7 @@ class CineDigitalServiceAPI:
         raise cds_exceptions.CineDigitalServiceAPIException(
             f"Show #{show_id} not found in Cine Digital Service API for cinemaId={self.cinemaid} & url={self.apiUrl}"
         )
+
+    def cancel_booking(self, barcodes: list[str], paiement_type_id: int):
+        cancel_body = CancelBookingCDS(barcodes, paiement_type_id)
+        cancel_booking(self.cinemaid, self.apiUrl, self.token, cancel_body)

@@ -1,4 +1,5 @@
 import datetime
+from typing import Dict
 
 from pydantic import Field
 
@@ -14,3 +15,12 @@ class ShowCDS(BaseModel):
 
     class Config:
         allow_population_by_field_name = True
+
+
+class CancelBookingCDS(BaseModel):
+    barcodes: list[str]
+    paiementTypeId: int
+
+
+class CancelBookingsErrorsCDS(BaseModel):
+    __root__: Dict[str, str]

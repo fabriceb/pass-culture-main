@@ -2560,3 +2560,10 @@ class MockedShows:
                 "forceTariffs": False,
             },
         ]
+
+
+class MockedCancelBookingSuccess:
+    status_code: 200
+
+    def json(self):
+        return {}
