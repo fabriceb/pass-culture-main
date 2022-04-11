@@ -1170,6 +1170,7 @@ class SaveVenueBankInformationsTest:
             )
 
     @patch("pcapi.use_cases.save_venue_bank_informations.update_demarches_simplifiees_text_annotations")
+    @patch("pcapi.use_cases.save_venue_bank_informations.archive_dossier")
     @patch(
         "pcapi.use_cases.save_venue_bank_informations.get_venue_bank_information_application_details_by_application_id"
     )
@@ -1200,7 +1201,7 @@ class SaveVenueBankInformationsTest:
         @patch("pcapi.connectors.api_entreprises.check_siret_is_still_active", return_value=True)
         @pytest.mark.usefixtures("db_session")
         def test_update_text_application_details_on_bank_information_success(
-            self, siret_active, mock_application_details, mock_update_text_annotation, app
+            self, siret_active, mock_application_details, mock_archive_dossier, mock_update_text_annotation, app
         ):
             OffererFactory(siren="999999999")
             offers_factories.VenueFactory(name="venuedemo", siret="36252187900034", businessUnit=None)
@@ -1215,3 +1216,4 @@ class SaveVenueBankInformationsTest:
                 "ANNOTATION_ID",
                 "Dossier imported Sucessfully",
             )
+            mock_archive_dossier.assert_called_once_with("DOSSIER_ID")
