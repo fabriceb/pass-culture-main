@@ -1,7 +1,10 @@
 import type { Location } from 'history'
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 
-import { BookingRecapResponseModel } from 'api/v1/gen'
+import {
+  BookingRecapResponseModel,
+  CollectiveBookingResponseModel,
+} from 'api/v1/gen'
 import useActiveFeature from 'components/hooks/useActiveFeature'
 import useCurrentUser from 'components/hooks/useCurrentUser'
 import useNotification from 'components/hooks/useNotification'
@@ -14,6 +17,7 @@ import NoBookingsForPreFiltersMessage from 'components/pages/Bookings/NoBookings
 import {
   GetBookingsCSVFileAdapter,
   GetFilteredBookingsRecapAdapter,
+  GetFilteredCollectiveBookingsRecapAdapter,
   GetUserHasBookingsAdapter,
   GetVenuesAdapter,
   TPreFilters,
@@ -30,7 +34,9 @@ interface IBookingsProps {
   venueId?: string
   audience: Audience
   getBookingsCSVFileAdapter: GetBookingsCSVFileAdapter
-  getFilteredBookingsRecapAdapter: GetFilteredBookingsRecapAdapter
+  getFilteredBookingsRecapAdapter:
+    | GetFilteredBookingsRecapAdapter
+    | GetFilteredCollectiveBookingsRecapAdapter
   getUserHasBookingsAdapter: GetUserHasBookingsAdapter
   getVenuesAdapter: GetVenuesAdapter
 }
@@ -59,7 +65,7 @@ const Bookings = ({
   })
   const [isTableLoading, setIsTableLoading] = useState(false)
   const [bookingsRecap, setBookingsRecap] = useState<
-    BookingRecapResponseModel[]
+    BookingRecapResponseModel[] | CollectiveBookingResponseModel[]
   >([])
   const [wereBookingsRequested, setWereBookingsRequested] = useState(false)
   const [hasBooking, setHasBooking] = useState(true)
