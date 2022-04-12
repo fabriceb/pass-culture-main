@@ -29,6 +29,7 @@ from pcapi.core.offerers.repository import find_offerer_by_validation_token
 from pcapi.core.offerers.repository import find_siren_by_offerer_id
 from pcapi.core.offerers.repository import find_user_offerer_by_validation_token
 from pcapi.core.offerers.repository import get_all_offerers_for_user
+from pcapi.core.offers import models as offers_models
 from pcapi.core.users.external import update_external_pro
 from pcapi.core.users.models import User
 from pcapi.core.users.repository import get_users_with_validated_attachment_by_offerer
@@ -449,3 +450,22 @@ def get_eligible_for_search_venues(max_venues: typing.Optional[int] = None) -> t
     for venue in query.yield_per(1_000):
         if venue.is_eligible_for_search:
             yield venue
+
+
+def is_venue_eligible_for_strict_search(venue: offerers_models.Venue) -> bool:
+    """
+    A venue is considered eligible for strict search if
+      1. it is eligible for search and validated/active;
+      2. at least one if its offers is eligible for search
+    """
+    if not venue.is_eligible_for_search or not venue.isReleased:
+        return False
+
+    at_least_one_eligible_offer_query = (
+        offers_models.Stock.query.join(offers_models.Offer)
+        .filter(offers_models.Offer.venueId == venue.id)
+        .filter(offers_models.Offer.is_eligible_for_search)
+        .exists()
+    )
+
+    return db.session.query(at_least_one_eligible_offer_query).scalar()
