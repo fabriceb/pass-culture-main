@@ -103,6 +103,14 @@ export enum BookingRecapStatus {
     Confirmed = 'confirmed',
     Pending = 'pending'
 }
+export interface BookingStatusFilter1 {
+}
+
+export interface BookingStatusHistoryResponseModel {
+    date: string;
+    status: string;
+}
+
 export interface BusinessUnitEditionBodyModel {
     siret: string;
 }
@@ -133,6 +141,23 @@ export interface CategoryResponseModel {
     proLabel: string;
 }
 
+export interface CollectiveBookingResponseModel {
+    beneficiary: EducationalRedactorResponseModel;
+    bookingAmount: number;
+    bookingDate: string;
+    bookingIsDuo?: boolean;
+    bookingStatus: string;
+    bookingStatusHistory: Array<BookingStatusHistoryResponseModel>;
+    bookingToken?: string | null;
+    stock: CollectiveStockResponseModel;
+}
+
+export enum CollectiveBookingStatusFilter {
+    Booked = 'booked',
+    Validated = 'validated',
+    Reimbursed = 'reimbursed'
+}
+
 export interface CollectiveOfferResponseModel {
     hasBookingLimitDatetimesPassed: boolean;
     id: string;
@@ -158,6 +183,14 @@ export interface CollectiveOffersStockResponseModel {
     id: string;
     offerId: string;
     remainingQuantity: number | string;
+}
+
+export interface CollectiveStockResponseModel {
+    eventBeginningDatetime: string;
+    offerIdentifier: string;
+    offerIsEducational?: boolean;
+    offerIsbn?: string | null;
+    offerName: string;
 }
 
 export interface CreateOffererQueryModel {
@@ -211,6 +244,13 @@ export interface EducationalOfferPartialExtraDataBodyModel {
     contactPhone?: string | null;
     offerVenue?: EducationalOfferExtraDataOfferVenueBodyModel | null;
     students?: Array<string> | null;
+}
+
+export interface EducationalRedactorResponseModel {
+    email: string;
+    firstname: string;
+    lastname: string;
+    phonenumber?: string | null;
 }
 
 export interface EducationalStockCreationBodyModel {
@@ -611,6 +651,23 @@ export interface ListBookingsQueryModel {
 
 export interface ListBookingsResponseModel {
     bookingsRecap: Array<BookingRecapResponseModel>;
+    page: number;
+    pages: number;
+    total: number;
+}
+
+export interface ListCollectiveBookingsQueryModel {
+    bookingPeriodBeginningDate?: string | null;
+    bookingPeriodEndingDate?: string | null;
+    bookingStatusFilter?: CollectiveBookingStatusFilter | null;
+    eventDate?: string | null;
+    extra?: string;
+    page?: number;
+    venueId?: number | null;
+}
+
+export interface ListCollectiveBookingsResponseModel {
+    bookingsRecap: Array<CollectiveBookingResponseModel>;
     page: number;
     pages: number;
     total: number;
@@ -1281,6 +1338,58 @@ export const DefaultApiFetchParamCreator = function (configuration?: APIConfigur
             }
             if (offerType !== undefined) {
                 localVarQueryParameter['offerType'] = offerType;
+            }
+            if (extra !== undefined) {
+                localVarQueryParameter['extra'] = extra;
+            }
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            localVarUrlObj.search = null;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary get_collective_bookings_pro <GET>
+         * @param {number} [page] 
+         * @param {number} [venueId] 
+         * @param {string} [eventDate] 
+         * @param {BookingStatusFilter1} [bookingStatusFilter] 
+         * @param {string} [bookingPeriodBeginningDate] 
+         * @param {string} [bookingPeriodEndingDate] 
+         * @param {string} [extra] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCollectiveGetCollectiveBookingsPro(page?: number, venueId?: number | null, eventDate?: string | null, bookingStatusFilter?: BookingStatusFilter1, bookingPeriodBeginningDate?: string | null, bookingPeriodEndingDate?: string | null, extra?: string, options: any = {}): Promise<FetchArgs> {
+            const localVarPath = `/collective/bookings/pro`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({
+                method: 'GET',
+                credentials: 'includes',
+            }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+            if (venueId !== undefined) {
+                localVarQueryParameter['venueId'] = venueId;
+            }
+            if (eventDate !== undefined) {
+                localVarQueryParameter['eventDate'] = eventDate;
+            }
+            if (bookingStatusFilter !== undefined) {
+                localVarQueryParameter['bookingStatusFilter'] = bookingStatusFilter;
+            }
+            if (bookingPeriodBeginningDate !== undefined) {
+                localVarQueryParameter['bookingPeriodBeginningDate'] = bookingPeriodBeginningDate;
+            }
+            if (bookingPeriodEndingDate !== undefined) {
+                localVarQueryParameter['bookingPeriodEndingDate'] = bookingPeriodEndingDate;
             }
             if (extra !== undefined) {
                 localVarQueryParameter['extra'] = extra;
@@ -2664,6 +2773,24 @@ export const DefaultApiFp = function(api: DefaultApi, configuration?: APIConfigu
         },
         /**
          * 
+         * @summary get_collective_bookings_pro <GET>
+         * @param {number} [page] 
+         * @param {number} [venueId] 
+         * @param {string} [eventDate] 
+         * @param {BookingStatusFilter1} [bookingStatusFilter] 
+         * @param {string} [bookingPeriodBeginningDate] 
+         * @param {string} [bookingPeriodEndingDate] 
+         * @param {string} [extra] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCollectiveGetCollectiveBookingsPro(basePath: string, page?: number, venueId?: number | null, eventDate?: string | null, bookingStatusFilter?: BookingStatusFilter1, bookingPeriodBeginningDate?: string | null, bookingPeriodEndingDate?: string | null, extra?: string, options?: any): Promise<ListCollectiveBookingsResponseModel> {
+            const localVarFetchArgs = await DefaultApiFetchParamCreator(configuration).getCollectiveGetCollectiveBookingsPro(page, venueId, eventDate, bookingStatusFilter, bookingPeriodBeginningDate, bookingPeriodEndingDate, extra, options);
+            const response = await safeFetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options)
+            return handleGeneratedApiResponse(response)
+        },
+        /**
+         * 
          * @summary list_collective_offers <GET>
          * @param {string} [nameOrIsbn] 
          * @param {number} [offererId] 
@@ -3245,6 +3372,22 @@ export interface DefaultApiInterface {
 
     /**
      * 
+     * @summary get_collective_bookings_pro <GET>
+     * @param {number} [page] 
+     * @param {number} [venueId] 
+     * @param {string} [eventDate] 
+     * @param {BookingStatusFilter1} [bookingStatusFilter] 
+     * @param {string} [bookingPeriodBeginningDate] 
+     * @param {string} [bookingPeriodEndingDate] 
+     * @param {string} [extra] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApiInterface
+     */
+    getCollectiveGetCollectiveBookingsPro(page?: number, venueId?: number | null, eventDate?: string | null, bookingStatusFilter?: BookingStatusFilter1, bookingPeriodBeginningDate?: string | null, bookingPeriodEndingDate?: string | null, extra?: string, options?: any): Promise<ListCollectiveBookingsResponseModel>;
+
+    /**
+     * 
      * @summary list_collective_offers <GET>
      * @param {string} [nameOrIsbn] 
      * @param {number} [offererId] 
@@ -3743,6 +3886,24 @@ export class DefaultApi extends BaseAPI implements DefaultApiInterface {
     public async getBookingsGetBookingsPro(page?: number, venueId?: number | null, eventDate?: string | null, bookingStatusFilter?: BookingStatusFilter, bookingPeriodBeginningDate?: string | null, bookingPeriodEndingDate?: string | null, offerType?: OfferType, extra?: string, options?: any) {
         const functionalApi = DefaultApiFp(this, this.configuration)
         return functionalApi.getBookingsGetBookingsPro(this.basePath, page, venueId, eventDate, bookingStatusFilter, bookingPeriodBeginningDate, bookingPeriodEndingDate, offerType, extra, options)
+    }
+    /**
+     * 
+     * @summary get_collective_bookings_pro <GET>
+     * @param {number} [page] 
+     * @param {number} [venueId] 
+     * @param {string} [eventDate] 
+     * @param {BookingStatusFilter1} [bookingStatusFilter] 
+     * @param {string} [bookingPeriodBeginningDate] 
+     * @param {string} [bookingPeriodEndingDate] 
+     * @param {string} [extra] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public async getCollectiveGetCollectiveBookingsPro(page?: number, venueId?: number | null, eventDate?: string | null, bookingStatusFilter?: BookingStatusFilter1, bookingPeriodBeginningDate?: string | null, bookingPeriodEndingDate?: string | null, extra?: string, options?: any) {
+        const functionalApi = DefaultApiFp(this, this.configuration)
+        return functionalApi.getCollectiveGetCollectiveBookingsPro(this.basePath, page, venueId, eventDate, bookingStatusFilter, bookingPeriodBeginningDate, bookingPeriodEndingDate, extra, options)
     }
     /**
      * 

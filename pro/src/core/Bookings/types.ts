@@ -1,4 +1,8 @@
-import { BookingRecapResponseModel, BookingStatusFilter } from 'api/v1/gen'
+import {
+  BookingRecapResponseModel,
+  BookingStatusFilter,
+  CollectiveBookingResponseModel,
+} from 'api/v1/gen'
 
 export type TPreFilters = {
   offerVenueId: string
@@ -25,10 +29,22 @@ export type GetFilteredBookingsRecapAdapterPayload = {
   currentPage: number
 }
 
+export type GetFilteredCollectiveBookingsRecapAdapterPayload = {
+  bookings: CollectiveBookingResponseModel[]
+  pages: number
+  currentPage: number
+}
+
 export type GetFilteredBookingsRecapAdapter = Adapter<
   TPreFilters & { page?: number },
   GetFilteredBookingsRecapAdapterPayload,
   GetFilteredBookingsRecapAdapterPayload
+>
+
+export type GetFilteredCollectiveBookingsRecapAdapter = Adapter<
+  TPreFilters & { page?: number },
+  GetFilteredCollectiveBookingsRecapAdapterPayload,
+  GetFilteredCollectiveBookingsRecapAdapterPayload
 >
 
 export type GetBookingsCSVFileAdapter = Adapter<

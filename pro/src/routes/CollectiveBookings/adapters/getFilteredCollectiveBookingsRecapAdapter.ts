@@ -1,14 +1,14 @@
 import { api } from 'api/v1/api'
-import { BookingRecapResponseModel } from 'api/v1/gen'
+import { CollectiveBookingResponseModel } from 'api/v1/gen'
 import {
-  GetFilteredBookingsRecapAdapter,
-  GetFilteredBookingsRecapAdapterPayload,
+  GetFilteredCollectiveBookingsRecapAdapter,
+  GetFilteredCollectiveBookingsRecapAdapterPayload,
 } from 'core/Bookings'
 import { buildBookingsRecapQuery } from 'core/Bookings/utils'
 
 const MAX_LOADED_PAGES = 5
 
-const FAILING_RESPONSE: AdapterFailure<GetFilteredBookingsRecapAdapterPayload> =
+const FAILING_RESPONSE: AdapterFailure<GetFilteredCollectiveBookingsRecapAdapterPayload> =
   {
     isOk: false,
     message:
@@ -20,10 +20,10 @@ const FAILING_RESPONSE: AdapterFailure<GetFilteredBookingsRecapAdapterPayload> =
     },
   }
 
-export const getFilteredBookingsRecapAdapter: GetFilteredBookingsRecapAdapter =
+export const getFilteredCollectiveBookingsRecapAdapter: GetFilteredCollectiveBookingsRecapAdapter =
   async apiFilters => {
     try {
-      let allBookings: BookingRecapResponseModel[] = []
+      let allBookings: CollectiveBookingResponseModel[] = []
       let currentPage = 0
       let pages: number
 
@@ -43,7 +43,7 @@ export const getFilteredBookingsRecapAdapter: GetFilteredBookingsRecapAdapter =
           page,
         } = buildBookingsRecapQuery(nextPageFilters)
 
-        const bookings = await api.getBookingsGetBookingsPro(
+        const bookings = await api.getCollectiveGetCollectiveBookingsPro(
           page,
           // @ts-expect-error api expect number
           venueId,
@@ -68,8 +68,9 @@ export const getFilteredBookingsRecapAdapter: GetFilteredBookingsRecapAdapter =
         },
       }
     } catch (e) {
+      console.log(e)
       return FAILING_RESPONSE
     }
   }
 
-export default getFilteredBookingsRecapAdapter
+export default getFilteredCollectiveBookingsRecapAdapter
