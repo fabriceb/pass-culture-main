@@ -16,25 +16,31 @@ from PIL import ImageOps
 from pydantic import confloat
 
 
-MAX_THUMB_WIDTH = 750
-CONVERSION_QUALITY = 90
-DO_NOT_CROP = (0, 0, 1)
-
-IMAGE_RATIO_PORTRAIT_DEFAULT = 6 / 9
-IMAGE_RATIO_LANDSCAPE_DEFAULT = 3 / 2
-
-
 if TYPE_CHECKING:
     CropParam = float
 else:
     CropParam = confloat(gt=0.0, lt=1.0)
-CropParams = tuple[CropParam, CropParam, CropParam]
+
+
+@dataclass
+class CropParams:
+    x_crop_percent: CropParam
+    y_crop_percent: CropParam
+    height_crop_percent: CropParam
 
 
 @dataclass
 class Coordinates:
     x: float
     y: float
+
+
+MAX_THUMB_WIDTH = 750
+CONVERSION_QUALITY = 90
+DO_NOT_CROP = CropParams(x_crop_percent=0.0, y_crop_percent=0.0, height_crop_percent=1.0)
+
+IMAGE_RATIO_PORTRAIT_DEFAULT = 6 / 9
+IMAGE_RATIO_LANDSCAPE_DEFAULT = 3 / 2
 
 
 def standardize_image(content: bytes, ratio: float, crop_params: Optional[CropParams] = None) -> bytes:
@@ -65,8 +71,13 @@ def standardize_image(content: bytes, ratio: float, crop_params: Optional[CropPa
     preprocessed_image = _pre_process_image(content)
 
     crop_params = crop_params or DO_NOT_CROP
-    x_crop_percent, y_crop_percent, height_crop_percent = crop_params
-    cropped_image = _crop_image(x_crop_percent, y_crop_percent, height_crop_percent, preprocessed_image, ratio)
+    cropped_image = _crop_image(
+        crop_params.x_crop_percent,
+        crop_params.y_crop_percent,
+        crop_params.height_crop_percent,
+        preprocessed_image,
+        ratio,
+    )
     resized_image = _resize_image(cropped_image, ratio)
 
     return _post_process_image(resized_image)
