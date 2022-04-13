@@ -14,7 +14,7 @@ class resourceCDS(enum.Enum):
     SCREENS = "screens"
 
 
-def build_url(cinema_id: str, url: str, token: str, resource: str) -> str:
+def build_url(cinema_id: str, url: str, token: str, resource: resourceCDS) -> str:
     return f"https://{cinema_id}.{url}{resource}?api_token={token}"
 
 
