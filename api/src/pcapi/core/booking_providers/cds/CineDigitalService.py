@@ -1,9 +1,13 @@
-from pcapi.connectors.cine_digital_service import get_payment_types
-from pcapi.connectors.cine_digital_service import get_screens
-from pcapi.connectors.cine_digital_service import get_shows
-from pcapi.connectors.cine_digital_service import get_tariffs
+from pcapi.connectors.cine_digital_service import build_url
+from pcapi.connectors.cine_digital_service import get_resource
+from pcapi.connectors.cine_digital_service import parse_json_data
+from pcapi.connectors.cine_digital_service import resourceCDS
 import pcapi.connectors.serialization.cine_digital_service_serializers as cds_serializers
 import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
+from pcapi.core.booking_providers.cds.mocked_api_calls import MockedPaymentType
+from pcapi.core.booking_providers.cds.mocked_api_calls import MockedScreens
+from pcapi.core.booking_providers.cds.mocked_api_calls import MockedShows
+from pcapi.core.booking_providers.cds.mocked_api_calls import MockedTariffs
 
 
 class CineDigitalServiceAPI:
@@ -13,7 +17,9 @@ class CineDigitalServiceAPI:
         self.cinemaid = cinemaid
 
     def get_show(self, show_id: int) -> cds_serializers.ShowCDS:
-        shows = get_shows(self.cinemaid, self.apiUrl, self.token)
+        url = build_url(self.cinemaid, self.apiUrl, self.token, resourceCDS.SHOWS)
+        data = get_resource(url, MockedShows)
+        shows = parse_json_data(data, cds_serializers.ShowCDS)
         for show in shows:
             if show.id == show_id:
                 return show
@@ -22,7 +28,9 @@ class CineDigitalServiceAPI:
         )
 
     def get_payment_type(self) -> cds_serializers.PaymentTypeCDS:
-        payment_types = get_payment_types(self.cinemaid, self.apiUrl, self.token)
+        url = build_url(self.cinemaid, self.apiUrl, self.token, resourceCDS.PAYMENT_TYPE)
+        data = get_resource(url, MockedPaymentType)
+        payment_types = parse_json_data(data, cds_serializers.PaymentTypeCDS)
         for payment_type in payment_types:
             if payment_type.short_label == "PASSCULTURE":
                 return payment_type
@@ -33,7 +41,10 @@ class CineDigitalServiceAPI:
         )
 
     def get_tariff(self) -> cds_serializers.TariffCDS:
-        tariffs = get_tariffs(self.cinemaid, self.apiUrl, self.token)
+        url = build_url(self.cinemaid, self.apiUrl, self.token, resourceCDS.TARIFFS)
+        data = get_resource(url, MockedTariffs)
+        tariffs = parse_json_data(data, cds_serializers.TariffCDS)
+
         for tariff in tariffs:
             if tariff.label == "Pass Culture 5€":
                 return tariff
@@ -43,7 +54,10 @@ class CineDigitalServiceAPI:
         )
 
     def get_screen(self, screen_id: int) -> cds_serializers.ScreenCDS:
-        screens = get_screens(self.cinemaid, self.apiUrl, self.token)
+        url = build_url(self.cinemaid, self.apiUrl, self.token, resourceCDS.SCREENS)
+        data = get_resource(url, MockedScreens)
+        screens = parse_json_data(data, cds_serializers.ScreenCDS)
+
         for screen in screens:
             if screen.id == screen_id:
                 return screen

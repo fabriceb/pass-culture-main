@@ -9,7 +9,7 @@ import pcapi.core.booking_providers.cds.exceptions as cds_exceptions
 
 
 class CineDigitalServiceGetShowTest:
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_shows")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_return_show_corresponding_to_show_id(self, mocked_get_shows):
         shows = [
             cds_serializers.ShowCDS(
@@ -40,7 +40,7 @@ class CineDigitalServiceGetShowTest:
 
         assert show.id == 2
 
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_shows")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_raise_exception_if_show_not_found(self, mocked_get_shows):
         shows = [
             cds_serializers.ShowCDS(
@@ -76,7 +76,7 @@ class CineDigitalServiceGetShowTest:
 
 
 class CineDigitalServiceGetPaymentTypeTest:
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_payment_types")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_return_pass_culture_payment_type(self, mocked_get_payment_types):
         payment_types = [
             cds_serializers.PaymentTypeCDS(
@@ -97,7 +97,7 @@ class CineDigitalServiceGetPaymentTypeTest:
         payment_type = cine_digital_service.get_payment_type()
         assert payment_type.short_label == "PASSCULTURE"
 
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_payment_types")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_raise_exception_if_payment_type_not_found(self, mocked_get_payment_types):
         payment_types = [
             cds_serializers.PaymentTypeCDS(
@@ -122,7 +122,7 @@ class CineDigitalServiceGetPaymentTypeTest:
 
 
 class CineDigitalServiceGetTariffTest:
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_tariffs")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_return_tariffs_with_pass_culture_tariff(self, mocked_get_tariffs):
         tariffs = [
             cds_serializers.TariffCDS(
@@ -144,7 +144,7 @@ class CineDigitalServiceGetTariffTest:
 
         assert tariff.label == "Pass Culture 5€"
 
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_tariffs")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_raise_exception_if_tariff_not_found(self, mocked_get_tariffs):
         tariffs = [
             cds_serializers.TariffCDS(
@@ -171,7 +171,7 @@ class CineDigitalServiceGetTariffTest:
 
 
 class CineDigitalServiceGetScreenTest:
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_screens")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_return_screen_corresponding_to_screen_id(self, mocked_get_screens):
         screens = [
             cds_serializers.ScreenCDS(
@@ -199,7 +199,7 @@ class CineDigitalServiceGetScreenTest:
 
         assert show.id == 2
 
-    @patch("pcapi.core.booking_providers.cds.CineDigitalService.get_screens")
+    @patch("pcapi.core.booking_providers.cds.CineDigitalService.parse_json_data")
     def test_should_raise_exception_if_screen_not_found(self, mocked_get_screens):
         screens = [
             cds_serializers.ScreenCDS(
